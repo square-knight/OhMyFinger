@@ -56,9 +56,9 @@ public class FaceTask extends AsyncTask{
 
             byte[] bytes = jpgOutputStream.toByteArray();
 //            Log.d(TAG, "onPreviewFrame: rawbitmap:" + rawbitmap.toString());
-//            OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Constant.url);
-//            String post = okHttpClientManage.post(bytes);
-//            text = post;
+            OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Constant.url);
+            String post = okHttpClientManage.post(bytes);
+            text = post;
 //            okHttpClientManage.post()
             //若要存储可以用下列代码，格式为jpg
             /* BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/fp.jpg"));
