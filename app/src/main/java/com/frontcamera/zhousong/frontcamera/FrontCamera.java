@@ -16,7 +16,7 @@ public class FrontCamera {
     Camera mCamera;
     int mCurrentCamIndex = 0;
     boolean previewing;
-
+    public static int ro = 0;
     public void setCamera(Camera camera)
     {
         this.mCamera = camera;
@@ -143,14 +143,14 @@ public class FrontCamera {
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
         {
             result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;  // compensate the mirror
+//            result = result % 360;  // compensate the mirror
         }
         else
         {
             // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
-        camera.setDisplayOrientation(result + 180);
+        camera.setDisplayOrientation(result);
     }
 
 }

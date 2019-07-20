@@ -55,10 +55,10 @@ public class FaceTask extends AsyncTask{
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG,100,jpgOutputStream);
 
             byte[] bytes = jpgOutputStream.toByteArray();
-            Log.i(TAG, "onPreviewFrame: rawbitmap:" + rawbitmap.toString());
-            OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Constant.url);
-            String post = okHttpClientManage.post(bytes);
-            text = post;
+//            Log.d(TAG, "onPreviewFrame: rawbitmap:" + rawbitmap.toString());
+//            OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Constant.url);
+//            String post = okHttpClientManage.post(bytes);
+//            text = post;
 //            okHttpClientManage.post()
             //若要存储可以用下列代码，格式为jpg
             /* BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/fp.jpg"));
