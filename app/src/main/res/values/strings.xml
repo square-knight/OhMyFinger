@@ -4,4 +4,7 @@
     <string name="training1">训练中…</string>
     <string name="training2">训练中……</string>
     <string name="train_over">训练结束</string>
+
+    <string name="predict_start">开始预测</string>
+    <string name="predict_stop">结束预测</string>
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -14,13 +13,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.frontcamera.zhousong.constant.Constant;
+import com.frontcamera.zhousong.Manager.SharedPreferencesManager;
+import com.frontcamera.zhousong.constant.Channel;
 
 import java.lang.ref.WeakReference;
 
@@ -32,6 +31,7 @@ public class MainActivity extends Activity {
     EditText collectEditText;
     Switch collectSwitch;
     Button trainButton;
+    Button predictButton;
     CameraSurfaceHolder mCameraSurfaceHolder = new CameraSurfaceHolder();
     private UIHandler uiHandler;
     private long firstTime;
@@ -52,17 +52,20 @@ public class MainActivity extends Activity {
         mCameraSurfaceHolder.setCameraSurfaceHolder(context,surfaceView);
         numberTextView = (TextView) findViewById(R.id.numberTextView);
         uriEditText = (EditText) findViewById(R.id.uriEditText);
-        uriEditText.setText(Constant.URL_UPLOAD);
+        String url = SharedPreferencesManager.getUrl(MainActivity.this);
+        uriEditText.setText(null == url ? Channel.URL_UPLOAD : url);
         collectEditText = (EditText) findViewById(R.id.collectEditText);
         collectSwitch = (Switch) findViewById(R.id.collectSwitch);
         trainButton = (Button) findViewById(R.id.trainButton);
+        predictButton = (Button) findViewById(R.id.predictButton);
     }
     private void addListener(){
         uriEditText.setOnFocusChangeListener(new View.OnFocusChangeListener(){
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus){
-                    Constant.url = uriEditText.getText().toString();
+                    Channel.url = uriEditText.getText().toString();
+                    SharedPreferencesManager.setUrl(Channel.url,MainActivity.this);
                 }
             }
         });
@@ -81,20 +84,26 @@ public class MainActivity extends Activity {
                 showToast("按钮文字为:" + trainButton.getText());
             }
         });
-
+        predictButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getResources().getString(R.string.predict_start)
+                        .equals(predictButton.getText().toString())){
+                    Channel.predicting = true;
+                    predictButton.setText(R.string.predict_stop);
+                }else{
+                    Channel.predicting = false;
+                    predictButton.setText(R.string.predict_start);
+                }
+            }
+        });
 
     }
     private void resizeView(View view){
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;         // 屏幕宽度（像素）
-//        int height = dm.heightPixels;       // 屏幕高度（像素）
-//        float density = dm.density;         // 屏幕密度（0.75 / 1.0 / 1.5）
-//        int densityDpi = dm.densityDpi;     // 屏幕密度dpi（120 / 160 / 240）
-        // 屏幕宽度算法:屏幕宽度（像素）/屏幕密度
-//        int screenWidth = (int) (width / density);  // 屏幕宽度(dp)
-//        int screenHeight = (int) (height / density);// 屏幕高度(dp)
+        int width = dm.widthPixels;
         ViewGroup.LayoutParams linearParams = view.getLayoutParams();
         linearParams.height = width - 20;
         view.setLayoutParams(linearParams);

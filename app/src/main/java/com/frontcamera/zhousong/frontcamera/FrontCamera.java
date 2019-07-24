@@ -95,7 +95,7 @@ public class FrontCamera {
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
             Camera.getCameraInfo(camIdx, cameraInfo);
             //在这里打开的是前置摄像头,可修改打开后置OR前置
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 try {
                     cam = Camera.open(camIdx);
                     mCurrentCamIndex = camIdx;
@@ -142,7 +142,7 @@ public class FrontCamera {
         int result;
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
         {
-            result = (info.orientation + degrees) % 360;
+            result = 360 - (info.orientation + degrees) % 360;
 //            result = result % 360;  // compensate the mirror
         }
         else

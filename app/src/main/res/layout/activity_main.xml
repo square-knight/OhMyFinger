@@ -78,15 +78,29 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
+            <Button
+                android:id="@+id/trainButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:background="#4FF1F1F1"
+                android:text="@string/train_start" />
 
-        <Button
-            android:id="@+id/trainButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:background="#4FF1F1F1"
-            android:text="@string/train_start" />
-
+            <Button
+                android:id="@+id/predictButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="#4FF1F1F1"
+                android:text="@string/predict_start" />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/collectLinearLayout"
             android:layout_width="match_parent"

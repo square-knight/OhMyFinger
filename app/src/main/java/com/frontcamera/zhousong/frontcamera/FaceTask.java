@@ -10,14 +10,10 @@ import android.os.Message;
 import android.util.Log;
 
 import com.frontcamera.zhousong.Manager.OKHttpClientManager;
-import com.frontcamera.zhousong.constant.Constant;
+import com.frontcamera.zhousong.constant.Channel;
+import com.frontcamera.zhousong.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * Created by zhousong on 2016/9/28.
@@ -42,7 +38,7 @@ public class FaceTask extends AsyncTask{
         int w = parameters.getPreviewSize().width;
         int h = parameters.getPreviewSize().height;
         String text = "";
-        Message message =Message.obtain();
+
         Rect rect = new Rect(0, 0, w, h);
         YuvImage yuvImg = new YuvImage(mData, imageFormat, w, h, null);
         try {
@@ -55,63 +51,24 @@ public class FaceTask extends AsyncTask{
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG,100,jpgOutputStream);
 
             byte[] bytes = jpgOutputStream.toByteArray();
-//            Log.d(TAG, "onPreviewFrame: rawbitmap:" + rawbitmap.toString());
-            OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Constant.url);
-            String post = okHttpClientManage.post(bytes);
-            text = post;
-//            okHttpClientManage.post()
-            //若要存储可以用下列代码，格式为jpg
-            /* BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/fp.jpg"));
-            img.compressToJpeg(rect, 100, bos);
-            bos.flush();
-            bos.close();
-            mCamera.startPreview();
-            */
+//          发送预测请求
+            if(Channel.predicting){
+                OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.url);
+                String post = okHttpClientManage.post(bytes);
+                text = post;
+            }
         }
         catch (Exception e)
         {
             text = "获取相机实时数据失败" + e.getLocalizedMessage();
             Log.e(TAG, "onPreviewFrame: 获取相机实时数据失败" + e.getLocalizedMessage());
         }
-        message.what = 10000;
-        message.obj = text;
-        mainActivity.getUiHandler().sendMessage(message);
+        if(StringUtil.isNotEmpty(text)){
+            Message message =Message.obtain();
+            message.what = 10000;
+            message.obj = text;
+            mainActivity.getUiHandler().sendMessage(message);
+        }
         return null;
     }
-
-//    public static void main(String[] args) throws Exception {
-//
-//        OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Constant.URL_UPLOAD);
-//        okHttpClientManage.post(getBytes("/Users/doom/Documents/cat1.jpeg"));
-//    }
-//    /**
-//     * 将文件转为byte[]
-//     * @param filePath 文件路径
-//     * @return
-//     */
-//    public static byte[] getBytes(String filePath){
-//        File file = new File(filePath);
-//        ByteArrayOutputStream out = null;
-//        try {
-//            FileInputStream in = new FileInputStream(file);
-//            out = new ByteArrayOutputStream();
-//            byte[] b = new byte[1024];
-//            int i = 0;
-//            while ((i = in.read(b)) != -1) {
-//
-//                out.write(b, 0, b.length);
-//            }
-//            out.close();
-//            in.close();
-//        } catch (FileNotFoundException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        byte[] s = out.toByteArray();
-//        return s;
-//
-//    }
 }
