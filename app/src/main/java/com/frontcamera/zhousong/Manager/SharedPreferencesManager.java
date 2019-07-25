@@ -24,4 +24,13 @@ public class SharedPreferencesManager {
         Boolean bool = e.commit();
         return bool;
     }
+    public static String getY(Context context){
+        return share(context).getString("y","");
+    }
+    public static boolean setY(String y, Context context){
+        SharedPreferences.Editor e = share(context).edit();
+        e.putString("y",y);
+        Boolean bool = e.commit();
+        return bool;
+    }
 }

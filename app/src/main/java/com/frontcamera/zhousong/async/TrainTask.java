@@ -8,7 +8,7 @@ import com.frontcamera.zhousong.constant.Channel;
 public class TrainTask extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
-        OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.urlTrain);
+        OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.baseUrl + Channel.train);
         String post = null;
         try {
             post = okHttpClientManage.post(null, OKHttpClientManager.MEDIATYPE_JSON);

@@ -3,9 +3,9 @@ package com.frontcamera.zhousong.constant;
 public class Channel {
     public static final String URL_UPLOAD = "http://192.168.10.59:9003";
     public static String baseUrl = URL_UPLOAD;
-    public static String urlPredict = baseUrl + "/predict";
-    public static String urlTrain = baseUrl + "/train";
-    public static String urlCollect = baseUrl + "/collect";
+    public static String predict = "/predict";
+    public static String train = "/train";
+    public static String collect = "/collect";
     public static String opt_type = "";
     public static final String OPT_TRAIN_STOP = "train_stop";
     public static final String OPT_TRAIN_START = "train_start";

@@ -135,11 +135,11 @@ public class OKHttpClientManager {
                     .post(body)
                     .addHeader("cache-control", "no-cache")
                     ;
-            Request request = builder.build();
             for (Map.Entry<String,String> entry:
                     headers.entrySet()) {
                 builder.addHeader(entry.getKey(),entry.getValue());
             }
+            Request request = builder.build();
             Response response = client.newCall(request).execute();
 //            logger.info("response=" + response.toString());
             if (!response.isSuccessful()) {

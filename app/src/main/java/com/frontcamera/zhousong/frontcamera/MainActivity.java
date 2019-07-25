@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -50,6 +53,7 @@ public class MainActivity extends Activity {
     private void initData() {
         Channel.opt_type = Channel.OPT_PREDICT_STOP;
         Channel.baseUrl = SharedPreferencesManager.getUrl(MainActivity.this);
+        Channel.y = SharedPreferencesManager.getY(MainActivity.this);
     }
 
     private void initView()
@@ -64,6 +68,7 @@ public class MainActivity extends Activity {
         uriEditText = (EditText) findViewById(R.id.uriEditText);
         uriEditText.setText(StringUtil.isEmpty(Channel.baseUrl) ? Channel.URL_UPLOAD : Channel.baseUrl);
         collectEditText = (EditText) findViewById(R.id.collectEditText);
+        collectEditText.setText(Channel.y);
         collectSwitch = (Switch) findViewById(R.id.collectSwitch);
         trainButton = (Button) findViewById(R.id.trainButton);
         predictButton = (Button) findViewById(R.id.predictButton);
@@ -76,6 +81,30 @@ public class MainActivity extends Activity {
                     Channel.baseUrl = uriEditText.getText().toString();
                     SharedPreferencesManager.setUrl(Channel.baseUrl,MainActivity.this);
                 }
+            }
+        });
+        collectEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(StringUtil.isEmpty(s.toString())){
+                    collectSwitch.setChecked(false);
+                    Channel.opt_type = Channel.OPT_COLLECT_STOP;
+                    collectSwitch.setEnabled(false);
+                }else {
+                    collectSwitch.setEnabled(true);
+                }
+                Channel.y = s.toString();
+                SharedPreferencesManager.setY(s.toString(), MainActivity.this);
             }
         });
         collectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -92,6 +121,7 @@ public class MainActivity extends Activity {
                             predictButton.setEnabled(false);
                             trainButton.setEnabled(false);
                             Channel.opt_type = Channel.OPT_COLLECT_START;
+                            SharedPreferencesManager.setY(Channel.y, MainActivity.this);
                         }else{
                             numberTextView.setText("图片组不能为空");
                         }

@@ -56,18 +56,19 @@ public class FaceTask extends AsyncTask{
 //          发送预测请求
             switch (Channel.opt_type){
                 case Channel.OPT_PREDICT_START:
-                    OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.urlPredict);
+                    OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.baseUrl + Channel.predict);
                     String post = okHttpClientManage.post(bytes);
                     text = post;
                     break;
                 case Channel.OPT_COLLECT_START:
                     if(StringUtil.isNotEmpty(Channel.y)){
-                        okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.urlCollect);
+                        okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.baseUrl + Channel.collect);
                         HashMap<String, String> headers = new HashMap<>(1);
                         headers.put("y",Channel.y);
                         post = okHttpClientManage.post(bytes,headers);
                         text = post;
                     }
+                    break;
             }
         }
         catch (Exception e)
