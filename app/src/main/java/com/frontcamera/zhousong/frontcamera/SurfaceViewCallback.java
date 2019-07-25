@@ -6,6 +6,8 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import com.frontcamera.zhousong.async.FaceTask;
+
 /**
  * Created by zhousong on 2016/9/19.
  * 相机界面SurfaceView的回调类
@@ -78,8 +80,7 @@ public final class SurfaceViewCallback implements android.view.SurfaceHolder.Cal
 //        count++;
         MainActivity mainActivity = (MainActivity) context;
 //        mainActivity.getUiHandler().sendEmptyMessage(count);
-        mFaceTask = new FaceTask(data, camera);
-        mFaceTask.mainActivity = mainActivity;
+        mFaceTask = new FaceTask(data, camera, mainActivity);
         mFaceTask.execute((Void) null);
         //Log.i(TAG, "onPreviewFrame: 启动了Task");
 

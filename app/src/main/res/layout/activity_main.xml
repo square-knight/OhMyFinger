@@ -125,7 +125,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number"
-                android:hint="组别ID"/>
+                android:hint="只能是0-5"/>
         </LinearLayout>
         <EditText
             android:id="@+id/uriEditText"

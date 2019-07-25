@@ -1,4 +1,4 @@
-package com.frontcamera.zhousong.frontcamera;
+package com.frontcamera.zhousong.async;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,9 +11,11 @@ import android.util.Log;
 
 import com.frontcamera.zhousong.Manager.OKHttpClientManager;
 import com.frontcamera.zhousong.constant.Channel;
+import com.frontcamera.zhousong.frontcamera.MainActivity;
 import com.frontcamera.zhousong.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 
 /**
  * Created by zhousong on 2016/9/28.
@@ -25,11 +27,11 @@ public class FaceTask extends AsyncTask{
     MainActivity mainActivity;
     private static final String TAG = "CameraTag";
     //构造函数
-    FaceTask(byte[] data , Camera camera)
+    public FaceTask(byte[] data , Camera camera , MainActivity mainActivity)
     {
         this.mData = data;
         this.mCamera = camera;
-
+        this.mainActivity = mainActivity;
     }
     @Override
     protected Object doInBackground(Object[] params) {
@@ -52,10 +54,20 @@ public class FaceTask extends AsyncTask{
 
             byte[] bytes = jpgOutputStream.toByteArray();
 //          发送预测请求
-            if(Channel.predicting){
-                OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.url);
-                String post = okHttpClientManage.post(bytes);
-                text = post;
+            switch (Channel.opt_type){
+                case Channel.OPT_PREDICT_START:
+                    OKHttpClientManager okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.urlPredict);
+                    String post = okHttpClientManage.post(bytes);
+                    text = post;
+                    break;
+                case Channel.OPT_COLLECT_START:
+                    if(StringUtil.isNotEmpty(Channel.y)){
+                        okHttpClientManage = OKHttpClientManager.getOkHttpClientManage(Channel.urlCollect);
+                        HashMap<String, String> headers = new HashMap<>(1);
+                        headers.put("y",Channel.y);
+                        post = okHttpClientManage.post(bytes,headers);
+                        text = post;
+                    }
             }
         }
         catch (Exception e)

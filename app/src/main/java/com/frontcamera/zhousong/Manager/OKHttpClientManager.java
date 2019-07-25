@@ -107,12 +107,39 @@ public class OKHttpClientManager {
     public String post(byte[] params) throws Exception {
         try {
 //            logger.info("reqUrl=" + reqUrl + " ,requestBody=" + params);
-            RequestBody body = RequestBody.create(MediaType.parse("application/octet.stream"), params);
+            RequestBody body = RequestBody.create(MediaType.parse("text/plain; charset=utf-8"), params);
             Request request = new Request.Builder()
                     .url(reqUrl)
                     .post(body)
                     .addHeader("cache-control", "no-cache")
                     .build();
+            Response response = client.newCall(request).execute();
+//            logger.info("response=" + response.toString());
+            if (!response.isSuccessful()) {
+                String excepMsg = response.code() + ":" + response.message();
+                response.body().close();
+                throw new RuntimeException(excepMsg);
+            }
+            return response.body().string();
+        } catch (Exception e) {
+//            logger.error("", e);
+            throw e;
+        }
+    }
+    public String post(byte[] params,Map<String,String> headers) throws Exception {
+        try {
+//            logger.info("reqUrl=" + reqUrl + " ,requestBody=" + params);
+            RequestBody body = RequestBody.create(MediaType.parse("application/octet.stream"), params);
+            Request.Builder builder = new Request.Builder()
+                    .url(reqUrl)
+                    .post(body)
+                    .addHeader("cache-control", "no-cache")
+                    ;
+            Request request = builder.build();
+            for (Map.Entry<String,String> entry:
+                    headers.entrySet()) {
+                builder.addHeader(entry.getKey(),entry.getValue());
+            }
             Response response = client.newCall(request).execute();
 //            logger.info("response=" + response.toString());
             if (!response.isSuccessful()) {

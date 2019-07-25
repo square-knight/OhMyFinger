@@ -19,7 +19,9 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.frontcamera.zhousong.Manager.SharedPreferencesManager;
+import com.frontcamera.zhousong.async.TrainTask;
 import com.frontcamera.zhousong.constant.Channel;
+import com.frontcamera.zhousong.util.StringUtil;
 
 import java.lang.ref.WeakReference;
 
@@ -35,16 +37,24 @@ public class MainActivity extends Activity {
     CameraSurfaceHolder mCameraSurfaceHolder = new CameraSurfaceHolder();
     private UIHandler uiHandler;
     private long firstTime;
+    private TrainTask trainTask;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         uiHandler=new UIHandler(this);
         initView();
         addListener();
+
     }
 
-    public void initView()
+    private void initData() {
+        Channel.opt_type = Channel.OPT_PREDICT_STOP;
+        Channel.baseUrl = SharedPreferencesManager.getUrl(MainActivity.this);
+    }
+
+    private void initView()
     {
+        initData();
         setContentView(R.layout.activity_main);
         surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
         View photoFrameLayout = findViewById(R.id.photoFrameLayout);
@@ -52,8 +62,7 @@ public class MainActivity extends Activity {
         mCameraSurfaceHolder.setCameraSurfaceHolder(context,surfaceView);
         numberTextView = (TextView) findViewById(R.id.numberTextView);
         uriEditText = (EditText) findViewById(R.id.uriEditText);
-        String url = SharedPreferencesManager.getUrl(MainActivity.this);
-        uriEditText.setText(null == url ? Channel.URL_UPLOAD : url);
+        uriEditText.setText(StringUtil.isEmpty(Channel.baseUrl) ? Channel.URL_UPLOAD : Channel.baseUrl);
         collectEditText = (EditText) findViewById(R.id.collectEditText);
         collectSwitch = (Switch) findViewById(R.id.collectSwitch);
         trainButton = (Button) findViewById(R.id.trainButton);
@@ -64,8 +73,8 @@ public class MainActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus){
-                    Channel.url = uriEditText.getText().toString();
-                    SharedPreferencesManager.setUrl(Channel.url,MainActivity.this);
+                    Channel.baseUrl = uriEditText.getText().toString();
+                    SharedPreferencesManager.setUrl(Channel.baseUrl,MainActivity.this);
                 }
             }
         });
@@ -73,15 +82,39 @@ public class MainActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(buttonView.isPressed()){
-                    // 每次 setChecked 时会触发onCheckedChanged 监听回调，而有时我们在设置setChecked后不想去自动触发 onCheckedChanged 里的具体操作, 即想屏蔽掉onCheckedChanged;加上此判断
-                    showToast((isChecked ? "开" : "关") + "图片组:" + collectEditText.getText());
+                    // 每次 setChecked 时会触发onCheckedChanged 监听回调，
+                    // 而有时我们在设置setChecked后不想去自动触发 onCheckedChanged 里的具体操作,
+                    // 即想屏蔽掉onCheckedChanged;加上此判断
+                    Channel.y = collectEditText.getText().toString();
+                    if(isChecked){
+                        if(StringUtil.isNotEmpty(Channel.y)){
+                            predictButton.setText(R.string.predict_start);
+                            predictButton.setEnabled(false);
+                            trainButton.setEnabled(false);
+                            Channel.opt_type = Channel.OPT_COLLECT_START;
+                        }else{
+                            numberTextView.setText("图片组不能为空");
+                        }
+                    }else{
+                        predictButton.setText(R.string.predict_start);
+                        predictButton.setEnabled(true);
+                        trainButton.setEnabled(true);
+                        Channel.opt_type = Channel.OPT_COLLECT_STOP;
+                    }
                 }
             }
         });
         trainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("按钮文字为:" + trainButton.getText());
+                if(getResources().getString(R.string.train_start)
+                        .equals(trainButton.getText().toString())){
+                    Channel.opt_type = Channel.OPT_PREDICT_START;
+                    predictButton.setText(R.string.training1);
+                    trainTask = new TrainTask();
+                    trainTask.execute((Void) null);
+                }
+                //起个线程轮询接口
             }
         });
         predictButton.setOnClickListener(new View.OnClickListener() {
@@ -89,10 +122,10 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 if(getResources().getString(R.string.predict_start)
                         .equals(predictButton.getText().toString())){
-                    Channel.predicting = true;
+                    Channel.opt_type = Channel.OPT_PREDICT_START;
                     predictButton.setText(R.string.predict_stop);
                 }else{
-                    Channel.predicting = false;
+                    Channel.opt_type = Channel.OPT_PREDICT_STOP;
                     predictButton.setText(R.string.predict_start);
                 }
             }
