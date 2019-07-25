@@ -70,6 +70,10 @@ public class MainActivity extends Activity {
         collectEditText = (EditText) findViewById(R.id.collectEditText);
         collectEditText.setText(Channel.y);
         collectSwitch = (Switch) findViewById(R.id.collectSwitch);
+        if(StringUtil.isEmpty(collectEditText.getText().toString())){
+            collectSwitch.setChecked(false);
+            collectSwitch.setEnabled(false);
+        }
         trainButton = (Button) findViewById(R.id.trainButton);
         predictButton = (Button) findViewById(R.id.predictButton);
     }
