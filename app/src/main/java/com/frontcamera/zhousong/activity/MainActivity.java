@@ -24,7 +24,6 @@ import com.frontcamera.zhousong.Manager.SharedPreferencesManager;
 import com.frontcamera.zhousong.async.TrainTask;
 import com.frontcamera.zhousong.constant.Channel;
 import com.frontcamera.zhousong.frontcamera.CameraSurfaceHolder;
-import com.frontcamera.zhousong.frontcamera.R;
 import com.frontcamera.zhousong.util.StringUtil;
 
 import java.lang.ref.WeakReference;
@@ -101,15 +100,21 @@ public class MainActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(StringUtil.isEmpty(s.toString())){
+                String str = s.toString();
+                if(StringUtil.isEmpty(str)){
+                    str = "-1";
+                }
+                int i = Integer.valueOf(str);
+                if(i > 5 || i < 0){
                     collectSwitch.setChecked(false);
                     Channel.opt_type = Channel.OPT_COLLECT_STOP;
                     collectSwitch.setEnabled(false);
                 }else {
                     collectSwitch.setEnabled(true);
+                    Channel.y = str;
+                    SharedPreferencesManager.setY(str, MainActivity.this);
                 }
-                Channel.y = s.toString();
-                SharedPreferencesManager.setY(s.toString(), MainActivity.this);
+
             }
         });
         collectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
