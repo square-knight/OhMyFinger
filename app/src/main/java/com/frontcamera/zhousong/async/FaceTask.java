@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.frontcamera.zhousong.Manager.OKHttpClientManager;
 import com.frontcamera.zhousong.constant.Channel;
-import com.frontcamera.zhousong.frontcamera.MainActivity;
+import com.frontcamera.zhousong.activity.MainActivity;
 import com.frontcamera.zhousong.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;

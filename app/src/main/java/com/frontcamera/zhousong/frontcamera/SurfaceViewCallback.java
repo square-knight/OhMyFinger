@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import com.frontcamera.zhousong.activity.MainActivity;
 import com.frontcamera.zhousong.async.FaceTask;
 
 /**

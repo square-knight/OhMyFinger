@@ -1,4 +1,4 @@
-package com.frontcamera.zhousong.frontcamera;
+package com.frontcamera.zhousong.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -24,6 +23,8 @@ import android.widget.Toast;
 import com.frontcamera.zhousong.Manager.SharedPreferencesManager;
 import com.frontcamera.zhousong.async.TrainTask;
 import com.frontcamera.zhousong.constant.Channel;
+import com.frontcamera.zhousong.frontcamera.CameraSurfaceHolder;
+import com.frontcamera.zhousong.frontcamera.R;
 import com.frontcamera.zhousong.util.StringUtil;
 
 import java.lang.ref.WeakReference;
