@@ -157,6 +157,7 @@ public class MainActivity extends Activity {
                             numberTextView.setText("图片组不能为空");
                         }
                     }else{
+                        numberTextView.setText("");
                         predictButton.setText(R.string.predict_start);
                         predictButton.setEnabled(true);
 //                        trainButton.setEnabled(true);
