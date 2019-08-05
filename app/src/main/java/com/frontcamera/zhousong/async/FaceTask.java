@@ -69,6 +69,8 @@ public class FaceTask extends AsyncTask{
                         text = post;
                     }
                     break;
+                    default :
+                        text = "";
             }
         }
         catch (Exception e)

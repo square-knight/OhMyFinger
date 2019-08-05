@@ -75,6 +75,7 @@ public class MainActivity extends Activity {
             collectSwitch.setEnabled(false);
         }
         trainButton = (Button) findViewById(R.id.trainButton);
+        trainButton.setEnabled(false);
         predictButton = (Button) findViewById(R.id.predictButton);
     }
     private void addListener(){
@@ -129,7 +130,7 @@ public class MainActivity extends Activity {
                         if(StringUtil.isNotEmpty(Channel.y)){
                             predictButton.setText(R.string.predict_start);
                             predictButton.setEnabled(false);
-                            trainButton.setEnabled(false);
+//                            trainButton.setEnabled(false);
                             Channel.opt_type = Channel.OPT_COLLECT_START;
                             SharedPreferencesManager.setY(Channel.y, MainActivity.this);
                         }else{
@@ -138,25 +139,25 @@ public class MainActivity extends Activity {
                     }else{
                         predictButton.setText(R.string.predict_start);
                         predictButton.setEnabled(true);
-                        trainButton.setEnabled(true);
+//                        trainButton.setEnabled(true);
                         Channel.opt_type = Channel.OPT_COLLECT_STOP;
                     }
                 }
             }
         });
-        trainButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(getResources().getString(R.string.train_start)
-                        .equals(trainButton.getText().toString())){
-                    Channel.opt_type = Channel.OPT_PREDICT_START;
-                    predictButton.setText(R.string.training1);
-                    trainTask = new TrainTask();
-                    trainTask.execute((Void) null);
-                }
-                //起个线程轮询接口
-            }
-        });
+//        trainButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(getResources().getString(R.string.train_start)
+//                        .equals(trainButton.getText().toString())){
+//                    Channel.opt_type = Channel.OPT_PREDICT_START;
+//                    trainButton.setText(R.string.training1);
+//                    trainTask = new TrainTask();
+//                    trainTask.execute((Void) null);
+//                }
+//                //起个线程轮询接口
+//            }
+//        });
         predictButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
