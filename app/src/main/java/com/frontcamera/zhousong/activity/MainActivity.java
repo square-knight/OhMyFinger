@@ -37,10 +37,13 @@ public class MainActivity extends Activity {
     Switch collectSwitch;
     Button trainButton;
     Button predictButton;
+    Button invisibleButton;
+
     CameraSurfaceHolder mCameraSurfaceHolder = new CameraSurfaceHolder();
     private UIHandler uiHandler;
     private long firstTime;
     private TrainTask trainTask;
+    private int invisibleButtonClickCount = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,8 +80,20 @@ public class MainActivity extends Activity {
         trainButton = (Button) findViewById(R.id.trainButton);
         trainButton.setEnabled(false);
         predictButton = (Button) findViewById(R.id.predictButton);
+
+        invisibleButton = (Button) findViewById(R.id.invisibleButton);
     }
     private void addListener(){
+        invisibleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(invisibleButtonClickCount > 10 && invisibleButtonClickCount < 13){
+                    showToast("收集功能已开启!");
+                }
+                invisibleButtonClickCount++;
+            }
+        });
+
         uriEditText.setOnFocusChangeListener(new View.OnFocusChangeListener(){
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -122,6 +137,11 @@ public class MainActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(buttonView.isPressed()){
+                    if(invisibleButtonClickCount <= 10){
+                        showToast("样本收集功能未开启");
+                        collectSwitch.setChecked(false);
+                        return;
+                    }
                     // 每次 setChecked 时会触发onCheckedChanged 监听回调，
                     // 而有时我们在设置setChecked后不想去自动触发 onCheckedChanged 里的具体操作,
                     // 即想屏蔽掉onCheckedChanged;加上此判断
