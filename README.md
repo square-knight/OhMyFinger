@@ -1,2 +1,2 @@
-# 手指个数识别-androidapp
+# 手指个数识别-Android app
 
